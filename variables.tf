@@ -1,38 +1,38 @@
-#variable "name" {
-#  type        = string
-#  default     = ""
-#  description = "Name  (e.g. `app` or `cluster`)."
-#}
+variable "name" {
+  type        = string
+  default     = ""
+  description = "Name  (e.g. `app` or `cluster`)."
+}
 
-#variable "repository" {
-#  type        = string
-#  default     = ""
-#  description = "Terraform current module repo"
-#}
+variable "repository" {
+  type        = string
+  default     = ""
+  description = "Terraform current module repo"
+}
 
-#variable "environment" {
-#  type        = string
-#  default     = ""
-#  description = "Environment (e.g. `prod`, `dev`, `staging`)."
-#}
+variable "environment" {
+  type        = string
+  default     = ""
+  description = "Environment (e.g. `prod`, `dev`, `staging`)."
+}
 
-#variable "label_order" {
-#  type        = list(any)
-#  default     = ["name", "environment"]
-#  description = "label order, e.g. `name`,`application`."
-#}
+variable "label_order" {
+  type        = list(any)
+  default     = ["name", "environment"]
+  description = "label order, e.g. `name`,`application`."
+}
 
-#variable "attributes" {
-#  type        = list(string)
-#  default     = []
-#  description = "Additional attributes (e.g. `1`)."
-#}
+variable "attributes" {
+  type        = list(string)
+  default     = []
+  description = "Additional attributes (e.g. `1`)."
+}
 
-#variable "managedby" {
-#  type        = string
-#  default     = ""
-#  description = ""
-#}
+variable "managedby" {
+  type        = string
+  default     = ""
+  description = ""
+}
 
 variable "deletion_window_in_days" {
   type        = number
