@@ -1,13 +1,22 @@
+##----------------------------------------------------------------------------------
+## Labels module callled that will be used for naming and tags.
+##----------------------------------------------------------------------------------
 module "labels" {
-  source      = "git::https://github.com/opsstation/terraform-aws-labels.git?ref=v1.0.0"
-  name        = var.name
-  repository  = var.repository
-  environment = var.environment
-  managedby   = var.managedby
-  label_order = var.label_order
-  attributes  = var.attributes
+  source      = "git::https://github.com/OpsStation/terraform-multicloud-labels.git"
+  name        = "payment-api"
+  environment = "prod"
+  repository  = "terraform-multicloud-labels"
+  attributes  = ["v2"]
+
+  extra_tags = {
+    Owner      = "Sohan"
+    CostCenter = "Finance"
+  }
 }
 
+####----------------------------------------------------------------------------------
+## This terraform resource creates a KMS Customer Master Key (CMK) and its alias.
+####----------------------------------------------------------------------------------
 resource "aws_kms_key" "default" {
   count                              = var.enabled && var.kms_key_enabled ? 1 : 0
   description                        = var.description
@@ -22,6 +31,9 @@ resource "aws_kms_key" "default" {
   tags                               = module.labels.tags
 }
 
+####----------------------------------------------------------------------------------
+## Create KMS keys in an external key store backed by your cryptographic keys outside of AWS.
+####----------------------------------------------------------------------------------
 resource "aws_kms_external_key" "external" {
   count                              = var.enabled && var.create_external_enabled ? 1 : 0
   bypass_policy_lockout_safety_check = var.bypass_policy_lockout_safety_check
@@ -35,6 +47,9 @@ resource "aws_kms_external_key" "external" {
   tags                               = module.labels.tags
 }
 
+####----------------------------------------------------------------------------------
+## Replica Key
+####----------------------------------------------------------------------------------
 resource "aws_kms_replica_key" "replica" {
   count                              = var.enabled && var.create_replica_enabled ? 1 : 0
   bypass_policy_lockout_safety_check = var.bypass_policy_lockout_safety_check
@@ -46,6 +61,9 @@ resource "aws_kms_replica_key" "replica" {
   tags                               = module.labels.tags
 }
 
+####----------------------------------------------------------------------------------
+## Replica External Key
+####----------------------------------------------------------------------------------
 resource "aws_kms_replica_external_key" "replica_external" {
   count                              = var.enabled && var.create_replica_external_enabled ? 1 : 0
   bypass_policy_lockout_safety_check = var.bypass_policy_lockout_safety_check
@@ -60,6 +78,9 @@ resource "aws_kms_replica_external_key" "replica_external" {
   tags = module.labels.tags
 }
 
+##----------------------------------------------------------------------------------
+## Provides an alias for a KMS customer master key.
+##----------------------------------------------------------------------------------
 resource "aws_kms_alias" "default" {
   count         = var.enabled ? 1 : 0
   name          = coalesce(var.alias, format("alias/%v", module.labels.id))
