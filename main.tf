@@ -2,7 +2,7 @@
 ## Labels module callled that will be used for naming and tags.
 ##----------------------------------------------------------------------------------
 module "labels" {
-  source      = "git::https://github.com/OpsStation/terraform-multicloud-labels.git?ref=v1.0.0"
+  source      = "git::https://github.com/OpsStation/terraform-multicloud-labels.git"
   name        = "payment-api"
   environment = "prod"
   repository  = "terraform-multicloud-labels"
