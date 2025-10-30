@@ -1,13 +1,24 @@
+##----------------------------------------------------------------------------------
+## Labels module callled that will be used for naming and tags.
+##----------------------------------------------------------------------------------
 module "labels" {
-  source      = "git::https://github.com/opsstation/terraform-aws-labels.git?ref=v1.0.0"
+  source      = "opsstation/labels/multicloud"
+  version     = "1.0.0"
   name        = var.name
-  repository  = var.repository
   environment = var.environment
-  managedby   = var.managedby
+  repository  = var.repository
   label_order = var.label_order
-  attributes  = var.attributes
+  attributes  = ["v2"]
+
+  extra_tags = {
+    Owner      = "Sohan"
+    CostCenter = "Finance"
+  }
 }
 
+####----------------------------------------------------------------------------------
+## This terraform resource creates a KMS Customer Master Key (CMK) and its alias.
+####----------------------------------------------------------------------------------
 resource "aws_kms_key" "default" {
   count                              = var.enabled && var.kms_key_enabled ? 1 : 0
   description                        = var.description
@@ -22,6 +33,9 @@ resource "aws_kms_key" "default" {
   tags                               = module.labels.tags
 }
 
+####----------------------------------------------------------------------------------
+## Create KMS keys in an external key store backed by your cryptographic keys outside of AWS.
+####----------------------------------------------------------------------------------
 resource "aws_kms_external_key" "external" {
   count                              = var.enabled && var.create_external_enabled ? 1 : 0
   bypass_policy_lockout_safety_check = var.bypass_policy_lockout_safety_check
@@ -35,6 +49,9 @@ resource "aws_kms_external_key" "external" {
   tags                               = module.labels.tags
 }
 
+####----------------------------------------------------------------------------------
+## Replica Key
+####----------------------------------------------------------------------------------
 resource "aws_kms_replica_key" "replica" {
   count                              = var.enabled && var.create_replica_enabled ? 1 : 0
   bypass_policy_lockout_safety_check = var.bypass_policy_lockout_safety_check
@@ -46,6 +63,9 @@ resource "aws_kms_replica_key" "replica" {
   tags                               = module.labels.tags
 }
 
+####----------------------------------------------------------------------------------
+## Replica External Key
+####----------------------------------------------------------------------------------
 resource "aws_kms_replica_external_key" "replica_external" {
   count                              = var.enabled && var.create_replica_external_enabled ? 1 : 0
   bypass_policy_lockout_safety_check = var.bypass_policy_lockout_safety_check
@@ -60,8 +80,31 @@ resource "aws_kms_replica_external_key" "replica_external" {
   tags = module.labels.tags
 }
 
+##----------------------------------------------------------------------------------
+## Provides an alias for a KMS customer master key.
+##----------------------------------------------------------------------------------
 resource "aws_kms_alias" "default" {
   count         = var.enabled ? 1 : 0
   name          = coalesce(var.alias, format("alias/%v", module.labels.id))
   target_key_id = try(aws_kms_key.default[0].key_id, aws_kms_external_key.external[0].id, aws_kms_replica_key.replica[0].key_id, aws_kms_replica_external_key.replica_external[0].key_id)
 }
+
+############################################################
+# AWS KMS Grant (optional)
+############################################################
+resource "aws_kms_grant" "default" {
+  count             = var.create_grant ? 1 : 0
+  name              = "${var.name}-grant"
+  key_id            = aws_kms_key.default[0].key_id
+  grantee_principal = var.grantee_principal_arn
+  operations        = var.grant_operations
+}
+resource "aws_kms_key" "this" {
+  description             = "KMS key for CloudTrail"
+  deletion_window_in_days = var.deletion_window_in_days
+  enable_key_rotation     = true
+  multi_region            = var.multi_region
+  policy                  = var.custom_policy != null ? var.custom_policy : var.policy
+}
+
+

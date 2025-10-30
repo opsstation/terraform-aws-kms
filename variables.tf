@@ -3,31 +3,40 @@ variable "name" {
   default     = ""
   description = "Name  (e.g. `app` or `cluster`)."
 }
-
 variable "repository" {
   type        = string
   default     = ""
   description = "Terraform current module repo"
 }
-
 variable "environment" {
   type        = string
   default     = ""
   description = "Environment (e.g. `prod`, `dev`, `staging`)."
 }
-
 variable "label_order" {
   type        = list(any)
   default     = ["name", "environment"]
   description = "label order, e.g. `name`,`application`."
 }
 
-variable "attributes" {
-  type        = list(string)
-  default     = []
-  description = "Additional attributes (e.g. `1`)."
+variable "create_grant" {
+  description = "Whether to create a KMS grant."
+  type        = bool
+  default     = false
 }
 
+variable "grantee_principal_arn" {
+  description = "IAM principal ARN to grant KMS access."
+  type        = string
+  default     = null
+}
+variable "grant_operations" {
+  description = "List of operations to allow in the KMS grant."
+  type        = list(string)
+  default     = ["Encrypt", "Decrypt", "ReEncryptFrom", "ReEncryptTo"]
+}
+
+# tflint-ignore: terraform_unused_declarations
 variable "managedby" {
   type        = string
   default     = ""
@@ -127,15 +136,24 @@ variable "primary_external_key_arn" {
 }
 
 variable "primary_key_arn" {
+  description = "The ARN of the primary KMS key"
   type        = string
-  default     = ""
-  description = "The primary key arn of a multi-region replica key"
+}
+# tflint-ignore: terraform_unused_declarations
+variable "aws_principal_arn" {
+  type        = string
+  description = "ARN of the AWS principal allowed to use the KMS key."
 }
 
 variable "policy" {
   type        = string
   default     = null
   description = "A valid policy JSON document. Although this is a key policy, not an IAM policy, an `aws_iam_policy_document`, in the form that designates a principal, can be used"
+}
+variable "custom_policy" {
+  type        = string
+  default     = null
+  description = "Optional custom IAM policy JSON for this resource."
 }
 
 variable "create_replica_enabled" {
