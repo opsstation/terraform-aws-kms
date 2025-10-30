@@ -98,3 +98,12 @@ resource "aws_kms_grant" "default" {
   grantee_principal = var.grantee_principal_arn
   operations        = var.grant_operations
 }
+resource "aws_kms_key" "this" {
+  description             = "KMS key for CloudTrail"
+  deletion_window_in_days = var.deletion_window_in_days
+  enable_key_rotation     = true
+  multi_region            = var.multi_region
+  policy                  = var.custom_policy != null ? var.custom_policy : var.policy
+}
+
+

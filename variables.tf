@@ -141,15 +141,24 @@ variable "primary_external_key_arn" {
 }
 
 variable "primary_key_arn" {
+  description = "The ARN of the primary KMS key"
   type        = string
-  default     = ""
-  description = "The primary key arn of a multi-region replica key"
+}
+# tflint-ignore: terraform_unused_declarations
+variable "aws_principal_arn" {
+  type        = string
+  description = "ARN of the AWS principal allowed to use the KMS key."
 }
 
 variable "policy" {
   type        = string
   default     = null
   description = "A valid policy JSON document. Although this is a key policy, not an IAM policy, an `aws_iam_policy_document`, in the form that designates a principal, can be used"
+}
+variable "custom_policy" {
+  type        = string
+  default     = null
+  description = "Optional custom IAM policy JSON for this resource."
 }
 
 variable "create_replica_enabled" {

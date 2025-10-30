@@ -13,8 +13,10 @@ module "kms_key" {
   multi_region            = true
   create_external_enabled = true
   valid_to                = "2023-11-21T23:20:50Z"
+  primary_key_arn         = "arn:aws:kms:us-east-1:123456789012:key/abcd1234-56ef-78gh-90ij-klmnopqrstuv"
   key_material_base64     = "WblXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
   policy                  = data.aws_iam_policy_document.default.json
+  aws_principal_arn       = "arn:aws:iam::123456789012:root"
 }
 
 data "aws_caller_identity" "current" {}

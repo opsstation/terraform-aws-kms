@@ -12,8 +12,9 @@ module "kms_key" {
   create_replica_enabled  = true
   enabled                 = true
   multi_region            = false
-  primary_key_arn         = "arn:aws:kms:us:key/XXXXXXXXXXXXXXXXXXXXXX"
+  primary_key_arn         = "arn:aws:kms:us-east-1:123456789012:key/abcd1234-56ef-78gh-90ij-klmnopqrstuv"
   policy                  = data.aws_iam_policy_document.default.json
+  aws_principal_arn       = "arn:aws:iam::123456789012:root"
 }
 
 data "aws_caller_identity" "current" {}
