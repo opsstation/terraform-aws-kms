@@ -1,28 +1,23 @@
-# tflint-ignore: terraform_unused_declarations
 variable "name" {
   type        = string
   default     = ""
   description = "Name  (e.g. `app` or `cluster`)."
 }
-# tflint-ignore: terraform_unused_declarations
 variable "repository" {
   type        = string
   default     = ""
   description = "Terraform current module repo"
 }
-# tflint-ignore: terraform_unused_declarations
 variable "environment" {
   type        = string
   default     = ""
   description = "Environment (e.g. `prod`, `dev`, `staging`)."
 }
-# tflint-ignore: terraform_unused_declarations
 variable "label_order" {
   type        = list(any)
   default     = ["name", "environment"]
   description = "label order, e.g. `name`,`application`."
 }
-# tflint-ignore: terraform_unused_declarations
 
 variable "create_grant" {
   description = "Whether to create a KMS grant."

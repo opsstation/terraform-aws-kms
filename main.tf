@@ -4,9 +4,10 @@
 module "labels" {
   source      = "opsstation/labels/multicloud"
   version     = "1.0.0"
-  name        = "payment-api"
-  environment = "prod"
-  repository  = "terraform-multicloud-labels"
+  name        = var.name
+  environment = var.environment
+  repository  = var.repository
+  label_order = var.label_order
   attributes  = ["v2"]
 
   extra_tags = {
