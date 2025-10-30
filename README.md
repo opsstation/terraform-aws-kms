@@ -5,7 +5,7 @@
 [![Terraform](https://img.shields.io/badge/Terraform-1.13%2B-purple.svg?logo=terraform)](#)
 [![CI](https://github.com/OpsStation/terraform-aws-kms/actions/workflows/ci.yml/badge.svg)](https://github.com/OpsStation/terraform-aws-kms/actions/workflows/ci.yml)
 
-> 🌩️ **A production-grade, reusable AWS Subnet module by [OpsStation](https://www.opsstation.com)**
+> 🌩️ **A production-grade, reusable AWS Kms module by [OpsStation](https://www.opsstation.com)**
 > Designed for reliability, performance, and security — following AWS networking best practices.
 ---
 
