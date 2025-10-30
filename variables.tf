@@ -23,11 +23,24 @@ variable "label_order" {
   description = "label order, e.g. `name`,`application`."
 }
 # tflint-ignore: terraform_unused_declarations
-variable "attributes" {
-  type        = list(string)
-  default     = []
-  description = "Additional attributes (e.g. `1`)."
+
+variable "create_grant" {
+  description = "Whether to create a KMS grant."
+  type        = bool
+  default     = false
 }
+
+variable "grantee_principal_arn" {
+  description = "IAM principal ARN to grant KMS access."
+  type        = string
+  default     = null
+}
+variable "grant_operations" {
+  description = "List of operations to allow in the KMS grant."
+  type        = list(string)
+  default     = ["Encrypt", "Decrypt", "ReEncryptFrom", "ReEncryptTo"]
+}
+
 # tflint-ignore: terraform_unused_declarations
 variable "managedby" {
   type        = string

@@ -87,3 +87,14 @@ resource "aws_kms_alias" "default" {
   name          = coalesce(var.alias, format("alias/%v", module.labels.id))
   target_key_id = try(aws_kms_key.default[0].key_id, aws_kms_external_key.external[0].id, aws_kms_replica_key.replica[0].key_id, aws_kms_replica_external_key.replica_external[0].key_id)
 }
+
+############################################################
+# AWS KMS Grant (optional)
+############################################################
+resource "aws_kms_grant" "default" {
+  count             = var.create_grant ? 1 : 0
+  name              = "${var.name}-grant"
+  key_id            = aws_kms_key.default[0].key_id
+  grantee_principal = var.grantee_principal_arn
+  operations        = var.grant_operations
+}
